@@ -7,7 +7,7 @@ var config  = require("./config");
 var paths = {
     "docs":  ['./lib/**/*.js', './README.md'],
     "lint":  ['./gulpfile.js', './lib/**/*.js', './test/**/*.js', './migrations/**/*.js'],
-    "tests": ['./test/**/*.js', '!test/{temp,temp,support/**}']
+    "tests": ['./test/**/*test.js', '!test/{temp,temp,support/**}']
 };
 
 gulp.task('test', ['lint', 'mocha']);

@@ -27,7 +27,8 @@ describe("signing submitting and confirming", function () {
             logger: helper.logger
         });
         var database = new sqlDatabase(helper.db);
-        payments = new Payments(database, config);
+        config.database = database;
+        payments = new Payments(config);
         loadTransactionFixtures(fixtures)
             .then(function () {
                 return processPayments(Fixtures.MixedTransactions.processPaymentsRounds, fixtures, stubby, payments);
