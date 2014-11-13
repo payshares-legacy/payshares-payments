@@ -35,7 +35,7 @@ describe("signer tests", function () {
                 network: networkStubby,
                 logger: helper.logger
             });
-            var database = new sqlDatabase(helper.config.db);
+            var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
             networkMock = sinon.mock(networkStubby.StellardStubbyMock);
             databaseMock = sinon.mock(database);
             signPaymentTransactionExpectation = networkMock.expects("signPaymentTransaction");

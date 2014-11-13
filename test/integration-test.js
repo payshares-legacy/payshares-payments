@@ -26,7 +26,7 @@ describe("signing submitting and confirming", function () {
             network: stubby,
             logger: helper.logger
         });
-        var database = new sqlDatabase(helper.db);
+        var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
         config.database = database;
         payments = new Payments(config);
         loadTransactionFixtures(fixtures)

@@ -6,8 +6,7 @@ process.env["NODE_ENV"]="test";
 
 var testHelper  = module.exports;
 testHelper.config = config;
-var db = Knex.initialize(config.db);
-testHelper.db = db;
+var db;
 testHelper.logger = {
     error: function () {},
     warn: function () {},
@@ -21,6 +20,13 @@ var clearDb = function() {
 };
 
 beforeEach(function (done) {
+    db = Knex.initialize(config.db);
+    testHelper.db = db;
     clearDb()
         .then(function () { done(); });
+});
+
+afterEach(function (done) {
+    db.client.pool.destroy();
+    done();
 });

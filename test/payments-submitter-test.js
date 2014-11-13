@@ -18,7 +18,7 @@ var WIZARD_SECRET = "test";
 // The submitter object we'll be testing
 var submitter;
 
-var transaction ;
+var transaction;
 
 describe("submitter tests", function () {
     beforeEach(function () {
@@ -41,7 +41,7 @@ describe("submitter tests", function () {
 
         beforeEach(function (done) {
             networkStubby = new StellardStubby();
-            var database = new sqlDatabase(helper.db);
+            var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
             networkMock = sinon.mock(networkStubby.StellardStubbyMock);
             databaseMock = sinon.mock(database);
 
