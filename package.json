@@ -8,8 +8,8 @@
     "mysql" : "2.5.3",
     "request": "2.*",
     "sinon": "1.10.3",
-    "unirest": "0.2.7",
-    "ws": "0.4.32"
+    "stellar-lib": "0.10.1",
+    "unirest": "0.2.7"
   },
   "repository": {
     "type": "git",
