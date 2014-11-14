@@ -15,7 +15,6 @@ gulp.task('test', ['lint', 'mocha']);
 gulp.task('lint', function () {
   return gulp.src(paths.lint)
     .pipe(plugins.jshint('.jshintrc'))
-    // .pipe(plugins.jscs())
     .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
