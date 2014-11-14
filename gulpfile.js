@@ -6,7 +6,7 @@ var config  = require("./config");
 
 var paths = {
     "docs":  ['./lib/**/*.js', './README.md'],
-    "lint":  ['./gulpfile.js', './lib/**/*.js', './test/**/*.js', './migrations/**/*.js'],
+    "lint":  ['./gulpfile.js', './lib/**/*.js', './migrations/**/*.js'],
     "tests": ['./test/**/*test.js', '!test/{temp,temp,support/**}']
 };
 
