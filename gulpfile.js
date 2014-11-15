@@ -6,7 +6,7 @@ var config  = require("./config");
 
 var paths = {
     "docs":  ['./lib/**/*.js', './README.md'],
-    "lint":  ['./gulpfile.js', './lib/**/*.js', './test/**/*.js', './migrations/**/*.js'],
+    "lint":  ['./gulpfile.js', './lib/**/*.js', './migrations/**/*.js'],
     "tests": ['./test/**/*test.js', '!test/{temp,temp,support/**}']
 };
 
@@ -15,7 +15,6 @@ gulp.task('test', ['lint', 'mocha']);
 gulp.task('lint', function () {
   return gulp.src(paths.lint)
     .pipe(plugins.jshint('.jshintrc'))
-    // .pipe(plugins.jscs())
     .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 

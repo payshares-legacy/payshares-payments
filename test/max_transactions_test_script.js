@@ -13,12 +13,12 @@ var client = new StellarClient(config);
 
 var SEND_ADDRESS = "gK6vSi1cdydpacA6e1ztSxk7XHyfAvjac";
 var SEND_AMOUNT = 25000000;
-var ITERATION_TIME = 1000 * 30 // 30 seconds
+var ITERATION_TIME = 1000 * 60 * 3 // 30 seconds
 
-var START_MAX_TRANSACTIONS = 1;
+var START_MAX_TRANSACTIONS = 1000;
+var END_MAX_TRANSACTIONS = 1000;
 var START_TXNS_SECOND = 1;
-var END_MAX_TRANSACTIONS = 10;
-var END_TXNS_SECOND = 10;
+var END_TXNS_SECOND = 1;
 
 // rate at which we call process payments
 var pollInterval = 100;

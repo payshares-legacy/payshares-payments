@@ -11,5 +11,5 @@
   "boss": true,
   "eqnull": true,
   "node": true,
-  "predef": [ "afterEach", "before", "beforeEach", "it", "describe", "test", "expect" ]
+  "predef": [ "afterEach", "before", "beforeEach", "it", "describe", "test", "expect", "-Promise" ]
 }
