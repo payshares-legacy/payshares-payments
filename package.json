@@ -18,7 +18,7 @@
     "url": "https://github.com/stellar/stellar-payments"
   },
   "scripts": {
-    "test": "NODE_ENV=test gulp db:ensure-created && gulp db:migrate && gulp test"
+    "test": "NODE_ENV=test gulp db:ensure-created && gulp db:migrate && gulp test && gulp submit-coverage"
   },
   "main": "index.js",
   "devDependencies": {
