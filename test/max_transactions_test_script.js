@@ -15,6 +15,7 @@ var SEND_ADDRESS = "gK6vSi1cdydpacA6e1ztSxk7XHyfAvjac";
 var SEND_AMOUNT = 25000000;
 var ITERATION_TIME = 1000 * 60 * 3 // 30 seconds
 
+// adjust these to test different combinations of txns/second max_txns
 var START_MAX_TRANSACTIONS = 1000;
 var END_MAX_TRANSACTIONS = 1000;
 var START_TXNS_SECOND = 1;
@@ -24,20 +25,13 @@ var END_TXNS_SECOND = 1;
 var pollInterval = 100;
 
 /**
+*
 [
-    // array indexed by txns_second
-    txs_second:
-    [ // txs_second = 1
-        // each array indexed by max transactions
-        [], // max transactions = 1
-        [], // max transactions = 2
-        ...
-    ],
-    [ // txs_second = 2
-        [], // max transactions = 1
-        [], // max transactions = 2
-        ...
-    ]
+    {
+        txns_second: int // how many txns_second for this result
+        max_transactions: int // how many max_transactions for this result
+        result: int // how many unsubmitted txns we had at the end
+    }
 ]
 */
 var data = [];
@@ -55,10 +49,11 @@ function runIteration(max_transactions, txns_second) {
         stopProcessingPayments();
         getUnsubmittedTransactions()
             .then(function (result) {
-                if (!data[txns_second - 1]) {
-                    data[txns_second - 1] = [];
-                }
-                data[txns_second - 1][max_transactions - 1] = result;
+                data.push({
+                    txns_second: txns_second,
+                    max_transactions: max_transactions,
+                    result: result
+                });
             })
             .then(clearDb)
             .then(function () {
@@ -97,12 +92,10 @@ function processPayments(max_transactions) {
     processingIntervalId = setInterval(function () {
         payments.processPayments(max_transactions);
     }, pollInterval);
-    console.log("processPayments interval id: " +  processingIntervalId._idleStart);
 }
 
 function stopProcessingPayments() {
     clearInterval(processingIntervalId);
-    console.log("clearing processing id: " +  processingIntervalId._idleStart);
 }
 
 // txns - transactions per second to add
@@ -118,11 +111,9 @@ function sendTransactions(txns) {
             client.createNewPayment(SEND_ADDRESS, SEND_AMOUNT);
         }
     }, 1000);
-    console.log("sendTransactions interval id: " +  transactionIntervalId._idleStart);
 }
 
 function stopSendingTransactions() {
-    console.log("clearning transactions id: " + transactionIntervalId._idleStart);
     clearInterval(transactionIntervalId);
 }
 

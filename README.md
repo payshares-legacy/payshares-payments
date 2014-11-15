@@ -1,6 +1,9 @@
 Stellar Payments
 =====================
 
+[![Build Status](https://travis-ci.org/stellar/stellar-payments.svg?branch=master)](https://travis-ci.org/stellar/stellar-wallet-js-sdk) [![Coverage Status](https://coveralls.io/repos/stellar/stellar-payments/badge.png?branch=master)](https://coveralls.io/r/stellar/stellar-payments?branch=master)
+
+
 Stellar Payments is a library providing robust transaction submission to the Stellar network.
 It is tolerant against failures to the network, transaction errors from the network, and
 confirms transactions only when they are included in a closed ledger.
@@ -15,7 +18,7 @@ The library provides two classes to help with creating and processing transactio
 Stellar Payments relies on a persistent storage mechanism to keep track of payment transactions. The library supports
 SQL storage out of the box, but you'll first have to add the Transactions table to your db.
 
-1. `cp ./node_modules/stellar-payments/config-example.js ./config.js`
+1. `cp ./node_modules/stellar-payments/config.js ./`
 2. Enter your db config into config.js
 3. `node ./node_modules/stellar-payments/bin/db-setup`
 
