@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+// setup the transactions table
+
+var config = require("../../../config");
+var Knex = require("knex");
+var db = Knex.initialize(config.db);
+
+db.schema.createTable('Transactions', function (table) {
+    table.increments("id").primary();
+    table.string("address", 128);
+    table.integer("amount");
+    table.string("memo", 512);
+    table.text("txblob");
+    table.string("txhash", 128);
+    table.integer("sequence");
+    table.text("error");
+    table.timestamp("signedAt").nullable();
+    table.timestamp("submittedAt").nullable();
+    table.timestamp("confirmedAt").nullable();
+    table.timestamp("abortedAt").nullable();
+})
+.then(function () {
+    console.log("success");
+    process.exit();
+})
+.catch(function (err) {
+    console.error(err);
+    process.exit(1)
+})
