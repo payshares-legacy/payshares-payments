@@ -1,7 +1,7 @@
 Stellar Payments
 =====================
 
-[![Build Status](https://travis-ci.org/stellar/stellar-payments.svg?branch=master)](https://travis-ci.org/stellar/stellar-wallet-js-sdk) [![Coverage Status](https://coveralls.io/repos/stellar/stellar-payments/badge.png?branch=master)](https://coveralls.io/r/stellar/stellar-payments?branch=master)
+[![Build Status](https://travis-ci.org/stellar/stellar-payments.svg?branch=master)](https://travis-ci.org/stellar/stellar-payments) [![Coverage Status](https://coveralls.io/repos/stellar/stellar-payments/badge.png?branch=master)](https://coveralls.io/r/stellar/stellar-payments?branch=master)
 
 
 Stellar Payments is a library providing robust transaction submission to the Stellar network.
