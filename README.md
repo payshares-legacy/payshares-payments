@@ -15,7 +15,7 @@ The library provides two classes to help with creating and processing transactio
 Stellar Payments relies on a persistent storage mechanism to keep track of payment transactions. The library supports
 SQL storage out of the box, but you'll first have to add the Transactions table to your db.
 
-1. `cp ./node_modules/stellar-payments/config-example.js ./config.js`
+1. `cp ./node_modules/stellar-payments/config.js ./`
 2. Enter your db config into config.js
 3. `node ./node_modules/stellar-payments/bin/db-setup`
 
