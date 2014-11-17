@@ -140,7 +140,7 @@ describe("submitter tests", function () {
                     return new Promise(function (resolve, reject) {
                         var result = {
                             result: {
-                                error: "txNotFound"
+                                error: "txnNotFound"
                             }
                         };
                         resolve(result);
