@@ -5,6 +5,8 @@ exports.up = function(knex, Promise) {
         table.increments("id").primary();
         table.string("address", 128);
         table.integer("amount");
+        table.string("currency", 3);
+        table.string("issuer", 128);
         table.string("memo", 512);
         table.text("txblob");
         table.string("txhash", 128);
