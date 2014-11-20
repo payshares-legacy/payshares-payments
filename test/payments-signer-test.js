@@ -25,9 +25,6 @@ describe("signer tests", function () {
         var networkStubby;
         var networkMock;
         var databaseMock;
-        var signPaymentTransactionExpectation;
-        var storeSignedTransactionExpectation;
-        var markTransactionErrorExpectation;
 
         beforeEach(function (done) {
             networkStubby = new StellardStubby();
@@ -36,10 +33,8 @@ describe("signer tests", function () {
                 logger: helper.logger
             });
             var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
-            networkMock = sinon.mock(networkStubby.StellardStubbyMock);
-            databaseMock = sinon.mock(database);
-            signPaymentTransactionExpectation = networkMock.expects("signPaymentTransaction");
-            storeSignedTransactionExpectation = databaseMock.expects("storeSignedTransaction");
+            networkMock = sandbox.mock(networkStubby.StellardStubbyMock);
+            databaseMock = sandbox.mock(database);
 
             signer = new PaymentsSigner(helper.config, database, networkStubby);
             signer.setSequenceNumber(STARTING_SEQUENCE_NUMBER);
@@ -48,8 +43,7 @@ describe("signer tests", function () {
         });
 
         afterEach(function (done) {
-            networkMock.restore();
-            databaseMock.restore();
+            sandbox.restore();
             done();
         });
 
@@ -60,8 +54,9 @@ describe("signer tests", function () {
                     address: "gUtH4rCNEGPWke3PzDnJ3E7mozcsuXJTAf",
                     amount: 1
                 };
-                signPaymentTransactionExpectation.once();
-                storeSignedTransactionExpectation.once();
+
+                var signPaymentTransactionExpectation = networkMock.expects("signPaymentTransaction").once();
+                var storeSignedTransactionExpectation = databaseMock.expects("storeSignedTransaction").once();
 
                 signer.signTransaction(goodTx)
                     .then(done);
@@ -84,15 +79,15 @@ describe("signer tests", function () {
         });
 
         describe("signs a bad transaction", function () {
+            var markTransactionErrorExpectation;
             beforeEach(function (done) {
                 var badTx = {
                     id: 1,
                     address: "xxxx",
                     amount: 1
                 };
-                markTransactionErrorExpectation = databaseMock.expects("markTransactionError");
+                markTransactionErrorExpectation = databaseMock.expects("markTransactionError").once();
                 networkStubby.returnErrorWhileSigning(badTx.address, badTx.amount, "invalidParams", "Invalid field \'tx_json.Destination\', not object.");
-                markTransactionErrorExpectation.once();
 
                 signer.signTransaction(badTx)
                     .then(done);
@@ -105,6 +100,34 @@ describe("signer tests", function () {
 
             it("should not increment the sequence number", function (done) {
                 assert.equal(signer.sequenceNumber, STARTING_SEQUENCE_NUMBER);
+                done();
+            });
+        });
+
+        describe("signs a multi currency transaction", function () {
+            var signPaymentTransactionSpy;
+            beforeEach(function (done) {
+                var multiCurrencyTx = {
+                    id: 1,
+                    address: "gUtXaF5wdpiT9wcdKpt9GMwF6cNSoW2Jsw",
+                    amount: 1,
+                    currency: "USD",
+                    issuer: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro"
+                }
+
+                signPaymentTransactionSpy = sandbox.spy(networkStubby, "signPaymentTransaction");
+                signer.signTransaction(multiCurrencyTx)
+                    .then(done);
+            });
+
+            it("should call with amount object", function (done) {
+                var amountObj = {
+                    value: 1,
+                    currency: "USD",
+                    issuer: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro"
+                };
+                var args = signPaymentTransactionSpy.args[0];
+                assert(_.isEqual(amountObj, args[3]));
                 done();
             });
         });
