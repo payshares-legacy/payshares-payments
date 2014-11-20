@@ -84,15 +84,15 @@ function TransactionFixture(title, address, id, sequence, getExpectations, getSt
     this.amount = 1;
     this.record = {id: id, address: address, amount: this.amount, memo: "success"};
     this.sequence = sequence;
-    this.txblob = getTxBlobOrHash(this.address, this.amount, this.sequence);
-    this.txhash = getTxBlobOrHash(this.address, this.amount, this.sequence);
+    this.txblob = getTxBlobOrHash(this.address, this.amount, self.currency, self.issuer, this.sequence);
+    this.txhash = getTxBlobOrHash(this.address, this.amount, self.currency, self.issuer, this.sequence);
     this.stubs = getStubs(this);
 
     // this function allows us to keep the txblob accurate as the seq num changes for future stub calls that use it
     this.setSequence = function (sequence) {
         self.sequence = sequence;
-        self.txblob = getTxBlobOrHash(self.address, self.amount, self.sequence);
-        self.txhash = getTxBlobOrHash(self.address, self.amount, self.sequence);
+        self.txblob = getTxBlobOrHash(self.address, self.amount, self.currency, self.issuer, self.sequence);
+        self.txhash = getTxBlobOrHash(self.address, self.amount, self.currency, self.issuer, self.sequence);
     };
 
     return {
@@ -225,11 +225,18 @@ function stubReturnErrorForTxBlob(fixture, error, code) {
 */
 function stubSignError(fixture, error, code) {
     var stubFn = function (stubby) {
-        stubby.returnErrorWhileSigning(fixture.address, fixture.amount, error, code);
+        var amount = fixture.amount; // need to multiple to get into stroops if stellar payment
+        if (!fixture.currency) {
+            amount = amount * 1000000;
+        }
+        stubby.returnErrorWhileSigning(fixture.address, amount, error, code);
     };
     return stubFn;
 }
 
-function getTxBlobOrHash(destination, amount, sequence) {
+function getTxBlobOrHash(destination, amount, currency, issuer, sequence) {
+    if (!currency) {
+        amount = amount * 1000000;
+    }
     return STELLAR_ADDRESS + "-" + STELLAR_SECRET + "-" + destination + "-" + amount + "-" + sequence;
 }
