@@ -87,7 +87,7 @@ describe("signer tests", function () {
                     amount: 1
                 };
                 markTransactionErrorExpectation = databaseMock.expects("markTransactionError").once();
-                networkStubby.returnErrorWhileSigning(badTx.address, badTx.amount, "invalidParams", "Invalid field \'tx_json.Destination\', not object.");
+                networkStubby.returnErrorWhileSigning(badTx.address, badTx.amount * 1000000, "invalidParams", "Invalid field \'tx_json.Destination\', not object.");
 
                 signer.signTransaction(badTx)
                     .then(done);
