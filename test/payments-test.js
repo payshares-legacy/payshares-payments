@@ -136,13 +136,16 @@ describe("payments tests", function () {
             });
         });
 
-        describe("when there's a fatal error", function () {
+        describe("when there's a non-aborted fatal error", function () {
             var error;
             beforeEach(function() {
                 error = new Error("test");
+                error.transaction = {id: 1};
                 payments.fatalError = error;
                 signTransactionsExpectation.never();
                 submitTransactionsExpectation.never();
+                var isAbortedStub = sandbox.stub(payments.database, "isAborted");
+                isAbortedStub.returns(Promise.resolve(false));
             });
 
             it("should reject with stored FatalError", function (done) {
@@ -176,6 +179,45 @@ describe("payments tests", function () {
                         submitTransactionsExpectation.verify();
                         done();
                     });
+            });
+        });
+
+        describe("when there's an aborted fatal error", function () {
+            beforeEach(function() {
+                error = new Error("test");
+                error.transaction = {id: 1};
+                payments.fatalError = error;
+                signTransactionsExpectation.once();
+                submitTransactionsExpectation.once();
+                var isAbortedStub = sandbox.stub(payments.database, "isAborted");
+                isAbortedStub.returns(Promise.resolve(true));
+            });
+
+            it("should set fatal error to null", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        assert.equal(null, payments.fatalError)
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should call signTransactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        signTransactionsExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should call submitTransactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        submitTransactionsExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
             });
         });
     });
