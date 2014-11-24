@@ -57,12 +57,14 @@ describe("payments tests", function () {
         var calculateSigningLimitExpectation;
         var signTransactionsExpectation;
         var submitTransactionsExpectation;
+        var _handleResignErrorExpectation;
 
         beforeEach(function () {
             _ensureSequenceNumberExpectation = paymentsMock.expects("_ensureSequenceNumber");
             calculateSigningLimitExpectation = paymentsMock.expects("calculateSigningLimit");
             signTransactionsExpectation = paymentsMock.expects("signTransactions");
             submitTransactionsExpectation = paymentsMock.expects("submitTransactions");
+            _handleResignErrorExpectation = paymentsMock.expects("_handleResignError");
         });
 
         describe("happy path", function () {
@@ -136,13 +138,16 @@ describe("payments tests", function () {
             });
         });
 
-        describe("when there's a fatal error", function () {
+        describe("when there's a non-aborted fatal error", function () {
             var error;
             beforeEach(function() {
                 error = new Error("test");
+                error.transaction = {id: 1};
                 payments.fatalError = error;
                 signTransactionsExpectation.never();
                 submitTransactionsExpectation.never();
+                var isAbortedStub = sandbox.stub(payments.database, "isAborted");
+                isAbortedStub.returns(Promise.resolve(false));
             });
 
             it("should reject with stored FatalError", function (done) {
@@ -177,6 +182,55 @@ describe("payments tests", function () {
                         done();
                     });
             });
+        });
+
+        describe("when there's an aborted fatal error", function () {
+            beforeEach(function() {
+                error = new Error("test");
+                error.transaction = {id: 1};
+                payments.fatalError = error;
+                signTransactionsExpectation.once();
+                submitTransactionsExpectation.once();
+                _handleResignErrorExpectation.once();
+                var isAbortedStub = sandbox.stub(payments.database, "isAborted");
+                isAbortedStub.returns(Promise.resolve(true));
+            });
+
+            it("should set fatal error to null", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        assert.equal(null, payments.fatalError)
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should call signTransactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        signTransactionsExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should call submitTransactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        submitTransactionsExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should resign transactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        _handleResignErrorExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
+            })
         });
     });
 
