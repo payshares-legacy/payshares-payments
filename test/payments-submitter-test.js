@@ -212,5 +212,31 @@ describe("submitter tests", function () {
                     });
             });
         });
+
+        describe("submits a transaction that returns a response with no meta field", function () {
+
+            it("should throw an error", function (done) {
+                sandbox.stub(networkStubby, "getTransaction").returns({result: {}});
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                    .then(function (tx) {
+                        transaction.txblob = tx.result.tx_blob;
+                        transaction.txhash = tx.result.tx_hash;
+                        return networkStubby.returnErrorForTxBlob(tx.result.tx_blob, "tefPAST_SEQ", 0);
+                    })
+                    .then(function () {
+                        return submitter.submitTransaction(transaction);
+                    })
+                    .then(function () {
+                        done("should have thrown an error");
+                    })
+                    .catch(Submitter.errors.NoMetaTransactionError, function (err) {
+                        done();
+                    })
+                    .catch(function (err) {
+                        console.error(err.stack);
+                        done("threw the wrong err: " + err);
+                    });
+            });
+        });
     });
 });
