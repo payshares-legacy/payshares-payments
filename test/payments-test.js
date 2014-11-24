@@ -57,12 +57,14 @@ describe("payments tests", function () {
         var calculateSigningLimitExpectation;
         var signTransactionsExpectation;
         var submitTransactionsExpectation;
+        var _handleResignErrorExpectation;
 
         beforeEach(function () {
             _ensureSequenceNumberExpectation = paymentsMock.expects("_ensureSequenceNumber");
             calculateSigningLimitExpectation = paymentsMock.expects("calculateSigningLimit");
             signTransactionsExpectation = paymentsMock.expects("signTransactions");
             submitTransactionsExpectation = paymentsMock.expects("submitTransactions");
+            _handleResignErrorExpectation = paymentsMock.expects("_handleResignError");
         });
 
         describe("happy path", function () {
@@ -189,6 +191,7 @@ describe("payments tests", function () {
                 payments.fatalError = error;
                 signTransactionsExpectation.once();
                 submitTransactionsExpectation.once();
+                _handleResignErrorExpectation.once();
                 var isAbortedStub = sandbox.stub(payments.database, "isAborted");
                 isAbortedStub.returns(Promise.resolve(true));
             });
@@ -219,6 +222,15 @@ describe("payments tests", function () {
                     })
                     .catch(done);
             });
+
+            it("should resign transactions", function (done) {
+                payments.processPayments()
+                    .then(function () {
+                        _handleResignErrorExpectation.verify();
+                        done();
+                    })
+                    .catch(done);
+            })
         });
     });
 
