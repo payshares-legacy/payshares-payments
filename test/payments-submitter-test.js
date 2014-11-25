@@ -214,8 +214,9 @@ describe("submitter tests", function () {
         });
 
         describe("submits a transaction that returns a response with no meta field", function () {
-
-            it("should throw an error", function (done) {
+            var markTransactionErrorSpy;
+            beforeEach(function (done) {
+                markTransactionErrorSpy = sandbox.spy(submitter.database.markTransactionError);
                 sandbox.stub(networkStubby, "getTransaction").returns({result: {}});
                 networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
                     .then(function (tx) {
@@ -224,8 +225,12 @@ describe("submitter tests", function () {
                         return networkStubby.returnErrorForTxBlob(tx.result.tx_blob, "tefPAST_SEQ", 0);
                     })
                     .then(function () {
-                        return submitter.submitTransaction(transaction);
-                    })
+                        done();
+                    });
+            });
+
+            it("should throw an error", function (done) {
+                return submitter.submitTransaction(transaction)
                     .then(function () {
                         done("should have thrown an error");
                     })
@@ -237,6 +242,16 @@ describe("submitter tests", function () {
                         done("threw the wrong err: " + err);
                     });
             });
+
+            it("should not call mark transaction error", function (done) {
+                return submitter.submitTransaction(transaction)
+                    .catch(Submitter.errors.NoMetaTransactionError, function (err) {})
+                    .then(function () {
+                        assert(markTransactionErrorSpy.callCount == 0);
+                        done();
+                    })
+                    .catch(done);
+            })
         });
     });
 });
