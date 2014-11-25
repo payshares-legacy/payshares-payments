@@ -12,9 +12,11 @@ exports.up = function(knex, Promise) {
         table.string("txhash", 255);
         table.integer("sequence");
         table.text("error");
+        table.boolean("fatal");
         table.timestamp("signedAt").nullable();
         table.timestamp("submittedAt").nullable();
         table.timestamp("confirmedAt").nullable();
+        table.timestamp("erroredAt").nullable();
         table.timestamp("abortedAt").nullable();
     });
 };
