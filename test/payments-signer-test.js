@@ -122,7 +122,7 @@ describe("signer tests", function () {
 
             it("should call with amount object", function (done) {
                 var amountObj = {
-                    value: 1,
+                    value: "1",
                     currency: "USD",
                     issuer: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro"
                 };
