@@ -2,7 +2,7 @@
   "name": "stellar-payments",
   "author": "Andrew Rogers",
   "license": "MIT",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "dependencies": {
     "bluebird": "2.3.11",
     "knex" : "0.7.3",
