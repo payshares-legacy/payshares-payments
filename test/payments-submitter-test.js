@@ -253,5 +253,56 @@ describe("submitter tests", function () {
                     .catch(done);
             })
         });
+
+        describe("submits a transaction that returns tesPENDING", function () {
+            var markTransactionErrorSpy;
+            beforeEach(function (done) {
+                markTransactionErrorSpy = sandbox.spy(submitter.database.markTransactionError);
+                markTransactionConfirmedSpy = sandbox.spy(submitter.database.markTransactionConfirmed);
+                sandbox.stub(networkStubby, "getTransaction").returns({result: {
+                    meta: {
+                        "TransactionResult": "tesPENDING"
+                    }
+                }});
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                    .then(function (tx) {
+                        transaction.txblob = tx.result.tx_blob;
+                        transaction.txhash = tx.result.tx_hash;
+                        return networkStubby.returnErrorForTxBlob(tx.result.tx_blob, "tefPAST_SEQ", 0);
+                    })
+                    .then(function () {
+                        done();
+                    });
+            });
+
+            it("should not mark transaction as confirmed", function (done) {
+                return submitter.submitTransaction(transaction)
+                    .then(function () {
+                        assert(markTransactionConfirmedSpy.callCount == 0);
+                        done();
+                    })
+                    .catch(done);
+            });
+
+            it("should not throw an error", function (done) {
+                return submitter.submitTransaction(transaction)
+                    .then(function () {
+                        done();
+                    })
+                    .catch(function (err) {
+                        done("should not have thrown an error");
+                    });
+            });
+
+            it("should not call mark transaction error", function (done) {
+                return submitter.submitTransaction(transaction)
+                    .catch(Submitter.errors.NoMetaTransactionError, function (err) {})
+                    .then(function () {
+                        assert(markTransactionErrorSpy.callCount == 0);
+                        done();
+                    })
+                    .catch(done);
+            })
+        });
     });
 });
