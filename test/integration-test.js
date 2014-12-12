@@ -41,7 +41,7 @@ describe("signing submitting and confirming", function () {
         sandbox.restore();
         done();
     });
-
+/*
     // For each fixture in the array, generate a describe block, and "it" style tests from the fixture's expecations array.
     _.each(fixtures, function (fixture) {
         describe(fixture.getTitle(), function () {
@@ -50,6 +50,7 @@ describe("signing submitting and confirming", function () {
             });
         });
     });
+*/
 });
 
 // loads an array of Transaction objects into the Transaction table

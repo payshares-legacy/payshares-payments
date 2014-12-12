@@ -55,16 +55,10 @@ describe("signer tests", function () {
                     amount: 1
                 };
 
-                var signPaymentTransactionExpectation = networkMock.expects("signPaymentTransaction").once();
                 var storeSignedTransactionExpectation = databaseMock.expects("storeSignedTransaction").once();
 
                 signer.signTransaction(goodTx)
                     .then(done);
-            });
-
-            it("should sign the transaction", function (done) {
-                networkMock.verify();
-                done();
             });
 
             it("should store the transaction", function (done) {
@@ -83,11 +77,10 @@ describe("signer tests", function () {
             beforeEach(function (done) {
                 var badTx = {
                     id: 1,
-                    address: "xxxx",
+                    address: "malformed",
                     amount: 1
                 };
                 markTransactionErrorExpectation = databaseMock.expects("markTransactionError").once();
-                networkStubby.returnErrorWhileSigning(badTx.address, badTx.amount * 1000000, "invalidParams", "Invalid field \'tx_json.Destination\', not object.");
 
                 signer.signTransaction(badTx)
                     .then(done);
@@ -115,7 +108,7 @@ describe("signer tests", function () {
                     issuer: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro"
                 }
 
-                signPaymentTransactionSpy = sandbox.spy(networkStubby, "signPaymentTransaction");
+                signPaymentTransactionSpy = sandbox.spy(signer, "signPaymentTransaction");
                 signer.signTransaction(multiCurrencyTx)
                     .then(done);
             });
