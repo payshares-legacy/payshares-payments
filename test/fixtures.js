@@ -19,43 +19,37 @@ fixtures.MixedTransactions = {
             stubTransactionSubmitError(fixture, "tefPAST_SEQ", -199)
         ];
     }),
-    new TransactionFixture("a sign error","signerroraddress", 2, 0, getSignErrorExpectations, function (fixture) {
-        return [
-            // this transaction errors when being signed right away, will ignore this sequence number and continue signing
-            stubSignError(fixture, "temMALFORMED", -299)
-        ];
-    }),
-    new TransactionFixture("a good transaction","gJ7fSAAdVfBszAxDu96V2RyHaJwKB9kdDr", 3, 1, getSuccessExpectations, function (fixture) {
+    new TransactionFixture("a good transaction","gJ7fSAAdVfBszAxDu96V2RyHaJwKB9kdDr", 2, 1, getSuccessExpectations, function (fixture) {
         return [
             null,
             stubTransactionSubmitError(fixture, "tefPAST_SEQ", -199)
         ];
     }),
-    new TransactionFixture("a don't resign error transaction - immediate error","gsP2BSyeCvkrGEzZrvx843vPvoAkfkXBLK", 4, 2, getSubmitErrorExpectations, function (fixture) {
+    new TransactionFixture("a don't resign error transaction - immediate error","gsP2BSyeCvkrGEzZrvx843vPvoAkfkXBLK", 3, 2, getSubmitErrorExpectations, function (fixture) {
         return [
             // this transaction returns an error immedaitely, but is applied and takes a seq number / fee
             stubReturnErrorForTxBlob(fixture, "tecPATH_DRY", 100)
         ];
     }),
-    new TransactionFixture("a good transaction","gwpHuj75u94dP1MtngDipuHsPJcZnVCQbm", 5, 3, getSuccessExpectations, function (fixture) {
+    new TransactionFixture("a good transaction","gwpHuj75u94dP1MtngDipuHsPJcZnVCQbm", 4, 3, getSuccessExpectations, function (fixture) {
         return [
             null,
             stubTransactionSubmitError(fixture, "tefPAST_SEQ", -199)
         ];
     }),
-    new TransactionFixture("a don't resign error transaction - resubmit error","gUXZZ5i5eveX6nL1yx6pvG8Zx7GPUVT63e", 6, 4, getApplyErrorExpectations, function (fixture) {
+    new TransactionFixture("a don't resign error transaction - resubmit error","gUXZZ5i5eveX6nL1yx6pvG8Zx7GPUVT63e", 5, 4, getApplyErrorExpectations, function (fixture) {
         return [
             // this transaction is successfully submitted, but when applied will return an error
             null,
             stubReturnErrorForTxBlob(fixture, "tecPATH_DRY", 100)
         ];
     }),
-    new TransactionFixture("a resign error transaction","gDbq2eUwAmAY7ifMr3r8WPX9MCrWEZ9xRD", 7, 5, getSubmitErrorExpectations, function (fixture) {
+    new TransactionFixture("a resign error transaction","gDbq2eUwAmAY7ifMr3r8WPX9MCrWEZ9xRD", 6, 5, getSubmitErrorExpectations, function (fixture) {
         return [
             stubReturnErrorForTxBlob(fixture, "terRETRY", -99)
         ];
     }),
-    new TransactionFixture("a good transaction","gp5bp4ZG9CgMX6frhuRhqvoZ9oRZyidbG3", 8, 6, getSuccessExpectations, function (fixture) {
+    new TransactionFixture("a good transaction","gp5bp4ZG9CgMX6frhuRhqvoZ9oRZyidbG3", 7, 6, getSuccessExpectations, function (fixture) {
         return [
             // it was signed but didn't submit because of error above
             null,

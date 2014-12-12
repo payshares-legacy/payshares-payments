@@ -12,8 +12,8 @@ var sqlDatabase         = require('../lib/sql-database');
 
 var sandbox = sinon.sandbox.create();
 
-var WIZARD_ADDRESS = "test";
-var WIZARD_SECRET = "test";
+var WIZARD_ADDRESS = "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro";
+var WIZARD_SECRET = "s3ghL92vyTCYYMW9HLNSTHnJxtzkx9eSBAiwQFnukHNNLURM3W5";
 
 // The submitter object we'll be testing
 var submitter;
@@ -63,7 +63,7 @@ describe("submitter tests", function () {
                 submitTransactionBlobExpectation.once();
                 markTransactionSubmittedExpectation.once();
 
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -109,7 +109,7 @@ describe("submitter tests", function () {
                     });
                 });
 
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -151,7 +151,7 @@ describe("submitter tests", function () {
             });
 
             it("should return a PastSequenceError", function (done) {
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -174,7 +174,7 @@ describe("submitter tests", function () {
                 var markTransactionErrorExpectation = databaseMock.expects("markTransactionError");
                 markTransactionErrorExpectation.once();
 
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -195,7 +195,7 @@ describe("submitter tests", function () {
         describe("submit a malformed transaction", function () {
 
             it("should return an error", function (done) {
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -218,7 +218,7 @@ describe("submitter tests", function () {
             beforeEach(function (done) {
                 markTransactionErrorSpy = sandbox.spy(submitter.database.markTransactionError);
                 sandbox.stub(networkStubby, "getTransaction").returns({result: {}});
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
@@ -264,7 +264,7 @@ describe("submitter tests", function () {
                         "TransactionResult": "tesPENDING"
                     }
                 }});
-                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, {Sequence: STARTING_SEQUENCE_NUMBER})
+                networkStubby.signPaymentTransaction(WIZARD_ADDRESS, WIZARD_SECRET, transaction.address, transaction.amount, STARTING_SEQUENCE_NUMBER)
                     .then(function (tx) {
                         transaction.txblob = tx.result.tx_blob;
                         transaction.txhash = tx.result.tx_hash;
