@@ -1,5 +1,6 @@
 var Promise = require("bluebird");
 var _       = require("lodash");
+var StellarLib = require("stellar-lib");
 
 var DEFAULT_LIMIT = 500;
 
@@ -63,8 +64,8 @@ StellardStubby.prototype.returnErrorForTxBlob = function (tx_blob, error, code) 
     }
 };
 
-StellardStubby.prototype.addSignedTransaction = function (address, secret, destination, amount, sequence) {
-    var tx = createSignPaymentTransactionResponse(address, secret, destination, amount, sequence);
+StellardStubby.prototype.addSignedTransaction = function (account, secret, destination, amount, sequence, txblob, txhash) {
+    var tx = createSignPaymentTransactionResponse(account, secret, destination, amount, sequence, txblob, txhash);
     this.storeSignedTransaction(tx.result.tx_blob, tx.result.tx_json);
 };
 
@@ -108,9 +109,9 @@ StellardStubby.prototype.getAccountTransactions = function (stellarAddress, opti
     });
 };
 
-StellardStubby.prototype.signPaymentTransaction = function(address, secret, destination, amount, options) {
+StellardStubby.prototype.signPaymentTransaction = function(address, secret, destination, amount, sequence) {
     var self = this;
-    this.StellardStubbyMock.signPaymentTransaction(address, secret, destination, amount, options);
+    this.StellardStubbyMock.signPaymentTransaction(address, secret, destination, amount, sequence);
 
     return new Promise(function (resolve, reject) {
         if (self.signingErrors[destination+amount]) {
@@ -122,7 +123,6 @@ StellardStubby.prototype.signPaymentTransaction = function(address, secret, dest
             };
             resolve(tx);
         } else {
-            var sequence = options.Sequence;
             var tx = createSignPaymentTransactionResponse(address, secret, destination, amount, sequence);
             self.storeSignedTransaction(tx.result.tx_blob, tx.result.tx_json);
             resolve(tx);
@@ -130,6 +130,7 @@ StellardStubby.prototype.signPaymentTransaction = function(address, secret, dest
     });
 };
 StellardStubbyMock.prototype.signPaymentTransaction = function (address, secret, destination, amount, options) {};
+
 
 StellardStubby.prototype.getTransaction = function (hash) {
     var self = this;
@@ -207,13 +208,18 @@ function sortBySequence(transactions) {
     });
 }
 
-function createSignPaymentTransactionResponse(address, secret, destination, amount, sequence) {
+function createSignPaymentTransactionResponse(account, secret, destination, amount, sequence, txblob, txhash) {
+    if (!txblob) {
+        var obj = getTxBlobAndHash(account, secret, destination, amount, sequence);
+        txblob = obj.blob;
+        txhash = obj.hash;
+    }
     return {
         "result": {
             "status": "success",
-            "tx_blob": address + "-" + secret + "-" + destination + "-" + amount + "-" + sequence,
+            "tx_blob": txblob,
             "tx_json": {
-                "Account": address,
+                "Account": account,
                 "Amount": amount,
                 "Destination": destination,
                 "Fee": 10,
@@ -222,7 +228,7 @@ function createSignPaymentTransactionResponse(address, secret, destination, amou
                 "SigningPubKey": 0,
                 "TransactionType": "Payment",
                 "TxnSignature": "",
-                "hash": address + "-" + secret + "-" + destination + "-" + amount + "-" + sequence
+                "hash": txhash
             }
         }
     };
@@ -254,6 +260,34 @@ function createSubmitTransactionBlobResponse(tx_record) {
             "tx_json": tx_record.tx
         }
     };
+}
+
+function getTxBlobAndHash(account, secret, destination, amount, sequence) {
+    var tx = new StellarLib.Transaction();
+    tx.remote = null;
+    tx.tx_json = {
+        Account: account,
+        Amount: amount,
+        TransactionType: 'Payment',
+        Destination: destination,
+        Sequence: sequence,
+        Fee: 10
+    };
+    tx._secret = secret;
+    tx.complete();
+
+    try {
+        tx.sign()
+    } catch (e) {
+        return Promise.reject(e);
+    }
+
+    var blob = tx.serialize().to_hex();
+    var hash = tx.hash();
+    return {
+        blob: blob,
+        hash: hash
+    }
 }
 
 module.exports = StellardStubby;

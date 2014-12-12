@@ -77,7 +77,7 @@ describe("signer tests", function () {
             beforeEach(function (done) {
                 var badTx = {
                     id: 1,
-                    address: "xxxx",
+                    address: "malformed",
                     amount: 1
                 };
                 markTransactionErrorExpectation = databaseMock.expects("markTransactionError").once();
@@ -108,7 +108,7 @@ describe("signer tests", function () {
                     issuer: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro"
                 }
 
-                signPaymentTransactionSpy = sandbox.spy(networkStubby, "signPaymentTransaction");
+                signPaymentTransactionSpy = sandbox.spy(signer, "signPaymentTransaction");
                 signer.signTransaction(multiCurrencyTx)
                     .then(done);
             });
