@@ -10,7 +10,7 @@ var StellardStubby  = require('./stellard-stubby');
 var Payments        = require('../lib/payments');
 var MockSigner      = require('./mock-signer');
 var MockSubmitter   = require('./mock-submitter');
-var sqlDatabase     = require('../lib/sql-database');
+var Database     = require('../lib/database');
 
 var sandbox = sinon.sandbox.create();
 
@@ -33,7 +33,7 @@ describe("payments tests", function () {
         signerMock = sandbox.mock(signer);
         submitterMock = sandbox.mock(submitter);
         networkStubby = new StellardStubby();
-        database = new sqlDatabase({connection: helper.db, logger: helper.logger});
+        database = new Database({connection: helper.db, logger: helper.logger});
         databaseMock = sandbox.mock(database);
 
         var config = _.assign(helper.config, {

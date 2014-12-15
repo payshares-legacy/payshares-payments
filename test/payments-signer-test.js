@@ -8,7 +8,7 @@ var sinon       = require('sinon');
 
 var StellardStubby  = require('./stellard-stubby');
 var PaymentsSigner  = require('../lib/signer');
-var sqlDatabase     = require('../lib/sql-database');
+var Database        = require('../lib/database');
 
 var sandbox = sinon.sandbox.create();
 
@@ -32,7 +32,7 @@ describe("signer tests", function () {
                 network: networkStubby,
                 logger: helper.logger
             });
-            var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
+            var database = new Database({connection: helper.db, logger: helper.logger});
             networkMock = sandbox.mock(networkStubby.StellardStubbyMock);
             databaseMock = sandbox.mock(database);
 

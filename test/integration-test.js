@@ -9,7 +9,7 @@ var Fixtures    = require("./fixtures");
 var Payments        = require('../lib/payments');
 var StellarNetwork  = require('../lib/stellar-network');
 var StellarStubby   = require('./stellard-stubby');
-var sqlDatabase     = require('../lib/sql-database');
+var Database     = require('../lib/database');
 
 var sandbox = sinon.sandbox.create();
 
@@ -26,7 +26,7 @@ describe("signing submitting and confirming", function () {
             network: stubby,
             logger: helper.logger
         });
-        var database = new sqlDatabase({connection: helper.db, logger: helper.logger});
+        var database = new Database({connection: helper.db, logger: helper.logger});
         config.database = database;
         payments = new Payments(config);
         loadTransactionFixtures(fixtures)
