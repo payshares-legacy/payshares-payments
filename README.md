@@ -46,12 +46,12 @@ processPayments();
 
 // calls processPayments every 500 ms
 function processPayments() {
-    payments.processPayments()
-        .then(function () {
-            setTimeout(function () {
-                processPayments();
-            }, 500);
-        });
+    setInterval(function () {
+        payments.processPayments(MAX_TRANSACTIONS)
+            .catch(function (err) {
+                // report fatal error
+            });
+    }, POLL_INTERVAL);
 }
 ```
 
