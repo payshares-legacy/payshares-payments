@@ -11,7 +11,7 @@ Stellar Payments is a Node JS library providing robust transaction submission to
 * transaction errors such as tecPATH_DRY, tefPAST_SEQ, tefALREADY, and many others
 * sequence number management
 * maintaining idempotence ensuring no double payouts
-* safe resigning do to ter/tem/tef transaction errors
+* safe resigning due to ter/tem/tef transaction errors
 * unfunded payments (if the account runs out of funds)
 * fatal errors, will stop processing and require manual intervention
 * TODO: fee changes
