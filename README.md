@@ -3,6 +3,7 @@ Stellar Payments
 
 [![Build Status](https://travis-ci.org/stellar/stellar-payments.svg?branch=master)](https://travis-ci.org/stellar/stellar-payments) [![Coverage Status](https://coveralls.io/repos/stellar/stellar-payments/badge.png?branch=master)](https://coveralls.io/r/stellar/stellar-payments?branch=master)
 
+####Important: stellar-payments library should point to only one stellard node. live.stellar.org is load balanced, so we have set up public1.stellar.org which points to a dedicated stellar node via elastic ip. This should be used as the stellard hostname in the config.
 
 Stellar Payments is a Node JS library providing robust transaction submission to the Stellar network. Out of the box, it will correctly handle:
 
