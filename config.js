@@ -2,9 +2,7 @@ module.exports = {
     db: {
         client   : "mysql",
         connection: {
-            host       : "localhost",
             user       : "root",
-            password   : "mypw",
             database : "stellar-payments_test"
         }
     },
