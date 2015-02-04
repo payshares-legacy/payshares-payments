@@ -14,9 +14,11 @@ db.schema.createTable('Transactions', function (table) {
     table.string("txhash", 128);
     table.integer("sequence");
     table.text("error");
+    table.text("fatal");
     table.timestamp("signedAt").nullable();
     table.timestamp("submittedAt").nullable();
     table.timestamp("confirmedAt").nullable();
+    table.timestamp("erroredAt").nullable();
     table.timestamp("abortedAt").nullable();
 })
 .then(function () {
