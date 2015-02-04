@@ -34,8 +34,8 @@ SQL storage out of the box, but you'll first have to add the Transactions table 
 var PaymentsClient = require('stellar-payments').Client;
 var payments = new PaymentsClient(config);
 
-// create a payment
-payments.createNewPayment(<destination>, 1, USD, <issuing address>, "withdrawal");
+// create a payment. use an amount object for a currency, or just an integer (in stellars) for a stellar payment
+payments.createNewPayment(<destination>, {value: 1, currency: "USD", issuer:<issuing address>}, "memo");
 ```
 
 #### Processing Payments
