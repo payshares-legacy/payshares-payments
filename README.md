@@ -41,12 +41,15 @@ payments.createNewPayment(<destination>, {value: 1, currency: "USD", issuer:<iss
 #### Processing Payments
 ```js
 var StellarPayments = require('stellar-payments').Payments;
+var config = require('stellar-payments/config');
 var payments = new StellarPayments(config);
 
 processPayments();
 
 // calls processPayments every 500 ms
 function processPayments() {
+var MAX_TRANSACTIONS = 10;
+var POLL_INTERVAL = 500;
     setInterval(function () {
         payments.processPayments(MAX_TRANSACTIONS)
             .catch(function (err) {
