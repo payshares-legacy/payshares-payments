@@ -1,5 +1,5 @@
 {
-  "name": "stellar-payments",
+  "name": "payshares-payments",
   "author": "Andrew Rogers",
   "license": "MIT",
   "version": "0.4.1",
@@ -10,12 +10,12 @@
     "mysql" : "2.5.3",
     "request": "2.48.0",
     "sinon": "1.10.3",
-    "stellar-lib": "0.10.1",
+    "payshares-lib": "git+https://github.com/payshares/payshares-lib.git#master",
     "unirest": "0.2.7"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stellar/stellar-payments"
+    "url": "https://github.com/payshares/payshares-payments"
   },
   "scripts": {
     "test": "NODE_ENV=test gulp db:ensure-created && gulp db:migrate && gulp test && gulp submit-coverage"

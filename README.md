@@ -1,14 +1,14 @@
-Stellar Payments
+Payshares Payments
 =====================
 
-[![Build Status](https://travis-ci.org/stellar/stellar-payments.svg?branch=master)](https://travis-ci.org/stellar/stellar-payments) [![Coverage Status](https://coveralls.io/repos/stellar/stellar-payments/badge.png?branch=master)](https://coveralls.io/r/stellar/stellar-payments?branch=master)
+[![Build Status](https://travis-ci.org/Payshares/payshares-payments.svg?branch=master)](https://travis-ci.org/Payshares/payshares-payments) [![Coverage Status](https://coveralls.io/repos/payshares/payshares-payments/badge.png?branch=master)](https://coveralls.io/r/payshares/payshares-payments?branch=master)
 
-####Important: stellar-payments library should point to only one stellard node. live.stellar.org is load balanced, so we have set up public1.stellar.org which points to a dedicated stellar node via elastic ip. This should be used as the stellard hostname in the config.
+####Important: payshares-payments library should point to only one paysharesd node. live.payshares.org is load balanced, so we have set up public1.payshares.org which points to a dedicated payshares node via elastic ip. This should be used as the paysharesd hostname in the config.
 
-Stellar Payments is a Node JS library providing robust transaction submission to the Stellar network. Out of the box, it will correctly handle:
+Payshares Payments is a Node JS library providing robust transaction submission to the Payshares network. Out of the box, it will correctly handle:
 
 * local signing of transactions
-* failed submission due to network failures or stellard downtime
+* failed submission due to network failures or paysharesd downtime
 * transaction errors such as tecPATH_DRY, tefPAST_SEQ, tefALREADY, and many others
 * sequence number management
 * maintaining idempotence ensuring no double payouts
@@ -22,27 +22,27 @@ Additionaly, the library is extremely flexible and allows the client to provide 
 ### Basic Integration
 
 #### Setting up the database
-Stellar Payments relies on a persistent storage mechanism to keep track of payment transactions. The library supports
+Payshares Payments relies on a persistent storage mechanism to keep track of payment transactions. The library supports
 SQL storage out of the box, but you'll first have to add the Transactions table to your db.
 
-1. `cp ./node_modules/stellar-payments/config.js ./`
+1. `cp ./node_modules/payshares-payments/config.js ./`
 2. Enter your db config into config.js
-3. `node ./node_modules/stellar-payments/bin/db-setup`
+3. `node ./node_modules/payshares-payments/bin/db-setup`
 
 #### Insert a new payment
 ```js
-var PaymentsClient = require('stellar-payments').Client;
+var PaymentsClient = require('payshares-payments').Client;
 var payments = new PaymentsClient(config);
 
-// create a payment. use an amount object for a currency, or just an integer (in stellars) for a stellar payment
+// create a payment. use an amount object for a currency, or just an integer (in paysharess) for a payshares payment
 payments.createNewPayment(<destination>, {value: 1, currency: "USD", issuer:<issuing address>}, "memo");
 ```
 
 #### Processing Payments
 ```js
-var StellarPayments = require('stellar-payments').Payments;
-var config = require('stellar-payments/config');
-var payments = new StellarPayments(config);
+var PaysharesPayments = require('payshares-payments').Payments;
+var config = require('payshares-payments/config');
+var payments = new PaysharesPayments(config);
 
 processPayments();
 
@@ -60,7 +60,7 @@ var POLL_INTERVAL = 500;
 ```
 
 ### Architecture
-At its core, Stellar Payments is simply a transaction signing and submission management tool. It provides a robust implementation that is useful out of the box with limited configuration, yet is abstracted enough to allow custom implementation for its various modules.
+At its core, Payshares Payments is simply a transaction signing and submission management tool. It provides a robust implementation that is useful out of the box with limited configuration, yet is abstracted enough to allow custom implementation for its various modules.
 
 The code is architected into several discrete modules:
 
@@ -71,10 +71,10 @@ The Payments class provides the core function processPayments() which drives the
 
 ##### lib/database.js - Persistent Transaction Store
 
-Stellar Payments uses persistent storage to keep track of transactions through the various transaction states. Stellar Payments includes a SQL schema and a Knex implementation which supports various SQL libraries. See the database module for more information.
+Payshares Payments uses persistent storage to keep track of transactions through the various transaction states. Payshares Payments includes a SQL schema and a Knex implementation which supports various SQL libraries. See the database module for more information.
 
-##### lib/network.js - Stellar Network Interface
-Provides methods that access payment specific endpoints in the stellar network.
+##### lib/network.js - Payshares Network Interface
+Provides methods that access payment specific endpoints in the payshares network.
 
 ##### lib/signer.js - Transaction Signer
 
@@ -92,9 +92,9 @@ The transaction data structure represents a single transaction and its associate
 ```js
 {
     address: // address of the destination, never null
-    amount: // the value of the amount (if stellar, value is in stellar), not null
-    currency: // the type of currency, null for STR
-    issuer: // the issuing currency, if null and currency is not null, will be stellar account
+    amount: // the value of the amount (if payshares, value is in payshares), not null
+    currency: // the type of currency, null for XPR
+    issuer: // the issuing currency, if null and currency is not null, will be payshares account
     txblob: // the signed binary form of the payment transaction, null until signing
     txhash: // the hash of the signed transaction, null until signing
     sequence: // the sequence number this transaction was signed with, null until signing
@@ -127,7 +127,7 @@ An aborted transaction is a transaction that has errored and has been manually a
 
 ### Modules
 
-Stellar Payments provides a sensible default implementation for signing and submitting, persisting transactions, and logging. However, the library is modular and abstracts these various components, allowing the consumer of the library to provide their own implementations at runtime (through the Payments config object). Here's a specification/interface for each module you can provide.
+Payshares Payments provides a sensible default implementation for signing and submitting, persisting transactions, and logging. However, the library is modular and abstracts these various components, allowing the consumer of the library to provide their own implementations at runtime (through the Payments config object). Here's a specification/interface for each module you can provide.
 
 ##### Errors
 Each module specific error must be inherited from Error by requiring lib/errors.js in the module. Additionally, each error should live in a static 'errors' object, which itself should be a static property of the module export. For instance, the module Signer exports its constructor function Signer(). And each error lives in Signer.errors, for example, Signer.errors.SigningError. See the code for clarity.
@@ -190,7 +190,7 @@ Retrieve transactions in the unsigned state from the database (up to the given l
     Returned during a signing error. This transaction should be moved to the non-fatal error state, and signing should continue.
 
 #### Network Module
-The network module provides the interface to the Stellar Network. IMPORTANT: the return objects from the Stellar Websocket API and the HTTP API are different. Each call to the network module expects the JSON response body from the HTTP API. Here's the interface:
+The network module provides the interface to the Payshares Network. IMPORTANT: the return objects from the Payshares Websocket API and the HTTP API are different. Each call to the network module expects the JSON response body from the HTTP API. Here's the interface:
 
 ##### ```submitTransactionBlob(txblob)```
 Submits the given txblob to the network. Returns the JSON response body.
@@ -202,8 +202,8 @@ Fetches the transaction with the given hash from the network. Returns the JSON r
 Fetches the account info for the given address. Returns the JSON response body.
 
 ##### Errors
-* StellarNetwork.errors.NetworkError
-    Thrown if there is a network error, or if stellar returns an error code in the JSON response body. This will be caught in Payments.js, logged, and ignored.
+* PaysharesNetwork.errors.NetworkError
+    Thrown if there is a network error, or if payshares returns an error code in the JSON response body. This will be caught in Payments.js, logged, and ignored.
 
 #### Submitter Module
 The submitter is the most complex module, and the included implementation should be relied on in most cases.

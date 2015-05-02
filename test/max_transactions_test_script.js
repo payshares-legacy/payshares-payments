@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // processes payments using various values for txns/second and max_transactions_in_flight
 
-var StellarPayments = require("../lib/payments");
-var StellarClient   = require("../lib/client");
+var PaysharesPayments = require("../lib/payments");
+var PaysharesClient   = require("../lib/client");
 var config = require("../config");
 var Knex = require("knex");
 
 var db = Knex.initialize(config.db);
 config.connection = db;
-var payments = new StellarPayments(config);
-var client = new StellarClient(config);
+var payments = new PaysharesPayments(config);
+var client = new PaysharesClient(config);
 
 var SEND_ADDRESS = "gK6vSi1cdydpacA6e1ztSxk7XHyfAvjac";
 var SEND_AMOUNT = 25000000;

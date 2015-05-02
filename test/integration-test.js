@@ -7,8 +7,8 @@ var helper      = require("./test-helper");
 var Fixtures    = require("./fixtures");
 
 var Payments        = require('../lib/payments');
-var StellarNetwork  = require('../lib/stellar-network');
-var StellarStubby   = require('./stellard-stubby');
+var PaysharesNetwork  = require('../lib/payshares-network');
+var PaysharesStubby   = require('./paysharesd-stubby');
 var Database     = require('../lib/database');
 
 var sandbox = sinon.sandbox.create();
@@ -16,12 +16,12 @@ var sandbox = sinon.sandbox.create();
 describe("signing submitting and confirming", function () {
     // payments instance under test
     var payments;
-    // stellar network stubbed implementation
+    // payshares network stubbed implementation
     var stubby;
     // the per test fixtures
     var fixtures = Fixtures.MixedTransactions.fixtures;
     beforeEach(function (done) {
-        stubby = new StellarStubby();
+        stubby = new PaysharesStubby();
         var config = _.assign(helper.config, {
             network: stubby,
             logger: helper.logger

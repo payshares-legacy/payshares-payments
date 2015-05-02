@@ -219,7 +219,7 @@ function stubReturnErrorForTxBlob(fixture, error, code) {
 */
 function stubSignError(fixture, error, code) {
     var stubFn = function (stubby) {
-        var amount = fixture.amount; // need to multiple to get into stroops if stellar payment
+        var amount = fixture.amount; // need to multiple to get into stroops if payshares payment
         if (!fixture.currency) {
             amount = amount * 1000000;
         }

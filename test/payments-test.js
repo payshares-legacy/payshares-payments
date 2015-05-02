@@ -6,7 +6,7 @@ var request     = Promise.promisify(require('request'));
 var assert      = require('assert');
 var sinon       = require('sinon');
 
-var StellardStubby  = require('./stellard-stubby');
+var PaysharesdStubby  = require('./paysharesd-stubby');
 var Payments        = require('../lib/payments');
 var MockSigner      = require('./mock-signer');
 var MockSubmitter   = require('./mock-submitter');
@@ -32,7 +32,7 @@ describe("payments tests", function () {
         submitter = new MockSubmitter();
         signerMock = sandbox.mock(signer);
         submitterMock = sandbox.mock(submitter);
-        networkStubby = new StellardStubby();
+        networkStubby = new PaysharesdStubby();
         database = new Database({connection: helper.db, logger: helper.logger});
         databaseMock = sandbox.mock(database);
 

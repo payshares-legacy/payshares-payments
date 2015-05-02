@@ -6,7 +6,7 @@ var assert      = require('assert');
 var sinon       = require('sinon');
 
 var Payments            = require('../lib/payments');
-var StellardStubby      = require('./stellard-stubby');
+var PaysharesdStubby      = require('./paysharesd-stubby');
 var Submitter           = require('../lib/submitter');
 var Database            = require('../lib/database');
 
@@ -40,9 +40,9 @@ describe("submitter tests", function () {
         var databaseMock;
 
         beforeEach(function (done) {
-            networkStubby = new StellardStubby();
+            networkStubby = new PaysharesdStubby();
             var database = new Database({connection: helper.db, logger: helper.logger});
-            networkMock = sinon.mock(networkStubby.StellardStubbyMock);
+            networkMock = sinon.mock(networkStubby.PaysharesdStubbyMock);
             databaseMock = sinon.mock(database);
 
             submitter = new Submitter(helper.config, database, networkStubby);

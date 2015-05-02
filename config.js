@@ -5,13 +5,13 @@ module.exports = {
             //host:"your_host_name",
             //password:"your_password",
             user       : "root",
-            database : "stellar-payments_test"
+            database : "payshares-payments_test"
         }
     },
     maxTransactionsInFlight: 10,
-    stellarAddress: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro",
-    stellarSecretKey: "s3ghL92vyTCYYMW9HLNSTHnJxtzkx9eSBAiwQFnukHNNLURM3W5",
-    stellardIp: "test.stellar.org",
-    stellardRpcPort: 9002,
-    stellardWebsocketPort: 9001
+    paysharesAddress: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro",
+    paysharesSecretKey: "s3ghL92vyTCYYMW9HLNSTHnJxtzkx9eSBAiwQFnukHNNLURM3W5",
+    paysharesdIp: "test.payshares.org",
+    paysharesdRpcPort: 9002,
+    paysharesdWebsocketPort: 9001
 }

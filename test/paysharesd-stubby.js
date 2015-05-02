@@ -1,10 +1,10 @@
 var Promise = require("bluebird");
 var _       = require("lodash");
-var StellarLib = require("stellar-lib");
+var PaysharesLib = require("payshares-lib");
 
 var DEFAULT_LIMIT = 500;
 
-function StellardStubby() {
+function PaysharesdStubby() {
     // we hold all transactions ('signed and unsubmitted' and 'submitted') in this array
     this.transactions = [];
     // this is the default sequence we'll use.
@@ -14,28 +14,28 @@ function StellardStubby() {
     // holds errors for transactions we haven't seen yet
     this.futureBlobErrors = {};
 
-    this.StellardStubbyMock = new StellardStubbyMock();
+    this.PaysharesdStubbyMock = new PaysharesdStubbyMock();
 }
 
-function StellardStubbyMock() {}
+function PaysharesdStubbyMock() {}
 
 // API
 
-StellardStubby.prototype.setSequenceNumber = function (sequence) {
+PaysharesdStubby.prototype.setSequenceNumber = function (sequence) {
     this.sequence = sequence;
 };
 
 /**
 * Returns the given signing error when signing a transaction with the given contactanted address+amount.
 */
-StellardStubby.prototype.returnErrorWhileSigning = function (address, amount, error, error_message) {
+PaysharesdStubby.prototype.returnErrorWhileSigning = function (address, amount, error, error_message) {
     this.signingErrors[address+amount] = {error: error, error_message: error_message};
 };
 
 /**
 * Sets the error we'll return when this transaction is submitted.
 */
-StellardStubby.prototype.setTransactionSubmitError = function (tx_blob, error, code) {
+PaysharesdStubby.prototype.setTransactionSubmitError = function (tx_blob, error, code) {
     var transaction = _.find(this.transactions, {'tx_blob': tx_blob});
     if (!transaction) {
         this.futureBlobErrors.tx_blob = {
@@ -51,7 +51,7 @@ StellardStubby.prototype.setTransactionSubmitError = function (tx_blob, error, c
 /**
 * Sets the error this transaction will have in the applied ledger.
 */
-StellardStubby.prototype.returnErrorForTxBlob = function (tx_blob, error, code) {
+PaysharesdStubby.prototype.returnErrorForTxBlob = function (tx_blob, error, code) {
     var transaction = _.find(this.transactions, {'tx_blob': tx_blob});
     if (!transaction) {
         this.futureBlobErrors[tx_blob] = {
@@ -64,13 +64,13 @@ StellardStubby.prototype.returnErrorForTxBlob = function (tx_blob, error, code) 
     }
 };
 
-StellardStubby.prototype.addSignedTransaction = function (account, secret, destination, amount, sequence, txblob, txhash) {
+PaysharesdStubby.prototype.addSignedTransaction = function (account, secret, destination, amount, sequence, txblob, txhash) {
     var tx = createSignPaymentTransactionResponse(account, secret, destination, amount, sequence, txblob, txhash);
     this.storeSignedTransaction(tx.result.tx_blob, tx.result.tx_json);
 };
 
 // Conveinence method to sign and "validate" a transaction
-StellardStubby.prototype.sendPaymentTransaction = function (address, secret, destination, amount, options) {
+PaysharesdStubby.prototype.sendPaymentTransaction = function (address, secret, destination, amount, options) {
     var self = this;
     return this.signPaymentTransaction(address, secret, destination, amount, options)
         .then(function (result) {
@@ -80,7 +80,7 @@ StellardStubby.prototype.sendPaymentTransaction = function (address, secret, des
 
 // STUB METHODS
 
-StellardStubby.prototype.getAccountTransactions = function (stellarAddress, options) {
+PaysharesdStubby.prototype.getAccountTransactions = function (paysharesAddress, options) {
     var self = this;
 
     return new Promise(function (resolve, reject) {
@@ -97,7 +97,7 @@ StellardStubby.prototype.getAccountTransactions = function (stellarAddress, opti
             transactions.unshift(sorted[i]);
         }
         var data = {
-            account: stellarAddress,
+            account: paysharesAddress,
             ledger_index_max: 0,
             ledger_index_min: 0,
             limit: limit,
@@ -109,9 +109,9 @@ StellardStubby.prototype.getAccountTransactions = function (stellarAddress, opti
     });
 };
 
-StellardStubby.prototype.signPaymentTransaction = function(address, secret, destination, amount, sequence) {
+PaysharesdStubby.prototype.signPaymentTransaction = function(address, secret, destination, amount, sequence) {
     var self = this;
-    this.StellardStubbyMock.signPaymentTransaction(address, secret, destination, amount, sequence);
+    this.PaysharesdStubbyMock.signPaymentTransaction(address, secret, destination, amount, sequence);
 
     return new Promise(function (resolve, reject) {
         if (self.signingErrors[destination+amount]) {
@@ -129,23 +129,23 @@ StellardStubby.prototype.signPaymentTransaction = function(address, secret, dest
         }
     });
 };
-StellardStubbyMock.prototype.signPaymentTransaction = function (address, secret, destination, amount, options) {};
+PaysharesdStubbyMock.prototype.signPaymentTransaction = function (address, secret, destination, amount, options) {};
 
 
-StellardStubby.prototype.getTransaction = function (hash) {
+PaysharesdStubby.prototype.getTransaction = function (hash) {
     var self = this;
-    this.StellardStubbyMock.getTransaction(hash);
+    this.PaysharesdStubbyMock.getTransaction(hash);
 
     return new Promise(function (resolve, reject) {
         var transaction = _.find(self.transactions, {tx_hash: hash});
         resolve(createGetTransactionResponse(transaction));
     });
 };
-StellardStubbyMock.prototype.getTransaction = function (hash) {};
+PaysharesdStubbyMock.prototype.getTransaction = function (hash) {};
 
-StellardStubby.prototype.submitTransactionBlob = function (tx_blob) {
+PaysharesdStubby.prototype.submitTransactionBlob = function (tx_blob) {
     var self = this;
-    this.StellardStubbyMock.submitTransactionBlob(tx_blob);
+    this.PaysharesdStubbyMock.submitTransactionBlob(tx_blob);
 
     return new Promise(function (resolve, reject) {
         var transaction = _.find(self.transactions, {tx_blob: tx_blob});
@@ -171,10 +171,10 @@ StellardStubby.prototype.submitTransactionBlob = function (tx_blob) {
         resolve(response);
     });
 };
-StellardStubbyMock.prototype.submitTransactionBlob = function (tx_blob) {};
+PaysharesdStubbyMock.prototype.submitTransactionBlob = function (tx_blob) {};
 
 // TODO: they only care about the sequence number right now
-StellardStubby.prototype.getAccountInfo = function (address) {
+PaysharesdStubby.prototype.getAccountInfo = function (address) {
     var self = this;
 
     return new Promise(function (resolve, reject) {
@@ -192,7 +192,7 @@ StellardStubby.prototype.getAccountInfo = function (address) {
 
 // HELPERS
 
-StellardStubby.prototype.storeSignedTransaction = function (tx_blob, tx) {
+PaysharesdStubby.prototype.storeSignedTransaction = function (tx_blob, tx) {
     var data = {
         tx_blob: tx_blob,
         tx_hash: tx.hash,
@@ -263,7 +263,7 @@ function createSubmitTransactionBlobResponse(tx_record) {
 }
 
 function getTxBlobAndHash(account, secret, destination, amount, sequence) {
-    var tx = new StellarLib.Transaction();
+    var tx = new PaysharesLib.Transaction();
     tx.remote = null;
     tx.tx_json = {
         Account: account,
@@ -290,4 +290,4 @@ function getTxBlobAndHash(account, secret, destination, amount, sequence) {
     }
 }
 
-module.exports = StellardStubby;
+module.exports = PaysharesdStubby;

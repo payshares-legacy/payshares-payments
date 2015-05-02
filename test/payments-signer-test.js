@@ -6,7 +6,7 @@ var request     = Promise.promisify(require('request'));
 var assert      = require('assert');
 var sinon       = require('sinon');
 
-var StellardStubby  = require('./stellard-stubby');
+var PaysharesdStubby  = require('./paysharesd-stubby');
 var PaymentsSigner  = require('../lib/signer');
 var Database        = require('../lib/database');
 
@@ -27,13 +27,13 @@ describe("signer tests", function () {
         var databaseMock;
 
         beforeEach(function (done) {
-            networkStubby = new StellardStubby();
+            networkStubby = new PaysharesdStubby();
             var config = _.assign(helper.config, {
                 network: networkStubby,
                 logger: helper.logger
             });
             var database = new Database({connection: helper.db, logger: helper.logger});
-            networkMock = sandbox.mock(networkStubby.StellardStubbyMock);
+            networkMock = sandbox.mock(networkStubby.PaysharesdStubbyMock);
             databaseMock = sandbox.mock(database);
 
             signer = new PaymentsSigner(helper.config, database, networkStubby);
