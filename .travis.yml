@@ -7,3 +7,5 @@ before_install:
 services:
   - mysql
   - redis
+notifications:
+  email: false
