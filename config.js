@@ -11,7 +11,7 @@ module.exports = {
     maxTransactionsInFlight: 10,
     paysharesAddress: "xnnr5zYTKGCSSKXocCCtQedidX4pQFiJaz",
     paysharesSecretKey: "sfgLNYuaKyKxrGoVRqMMHX3pUK7e1ZGMkMeHonbJpnfiFqnthYi",
-    paysharesdIp: "test.payshares.co",
-    paysharesdRpcPort: 9002,
-    paysharesdWebsocketPort: 9001
+    paysharesdIp: "test.payshares.org",
+    paysharesdRpcPort: 5015,
+    paysharesdWebsocketPort: 5016
 }
