@@ -3,7 +3,7 @@ Payshares Payments
 
 [![Build Status](https://travis-ci.org/Payshares/payshares-payments.svg?branch=master)](https://travis-ci.org/Payshares/payshares-payments) [![Coverage Status](https://coveralls.io/repos/github/Payshares/payshares-payments/badge.svg)](https://coveralls.io/github/Payshares/payshares-payments)
 
-####Important: payshares-payments library should point to only one paysharesd node. live.payshares.org is load balanced, so we have set up public1.payshares.org which points to a dedicated payshares node via elastic ip. This should be used as the paysharesd hostname in the config.
+#### Important: payshares-payments library should point to only one paysharesd node. live.payshares.org is load balanced, so we have set up public1.payshares.org which points to a dedicated payshares node via elastic ip. This should be used as the paysharesd hostname in the config.
 
 Payshares Payments is a Node JS library providing robust transaction submission to the Payshares network. Out of the box, it will correctly handle:
 
