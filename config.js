@@ -9,8 +9,8 @@ module.exports = {
         }
     },
     maxTransactionsInFlight: 10,
-    paysharesAddress: "gM3a41VDi7fBj8EZBqnBGkGPGz4idBquro",
-    paysharesSecretKey: "s3ghL92vyTCYYMW9HLNSTHnJxtzkx9eSBAiwQFnukHNNLURM3W5",
+    paysharesAddress: "xnnr5zYTKGCSSKXocCCtQedidX4pQFiJaz",
+    paysharesSecretKey: "sfgLNYuaKyKxrGoVRqMMHX3pUK7e1ZGMkMeHonbJpnfiFqnthYi",
     paysharesdIp: "test.payshares.co",
     paysharesdRpcPort: 9002,
     paysharesdWebsocketPort: 9001
