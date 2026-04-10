@@ -6,7 +6,7 @@
   "dependencies": {
     "bluebird": "2.3.11",
     "knex" : "0.7.3",
-    "lodash": "2.4.1",
+    "lodash": "4.18.1",
     "mysql" : "2.5.3",
     "request": "2.48.0",
     "sinon": "1.10.3",
